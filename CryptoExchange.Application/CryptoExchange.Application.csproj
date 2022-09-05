@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CryptoExchange.Domain\CryptoExchange.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Interfaces\" />
+    <None Remove="Microsoft.EntityFrameworkCore" />
+    <None Remove="Common\" />
+    <None Remove="Common\Mappings\" />
+    <None Remove="AutoMapper" />
+    <None Remove="MediatR" />
+    <None Remove="Feature\" />
+    <None Remove="Orders\Commands\" />
+    <None Remove="Orders\Commands\CreateOrder\" />
+    <None Remove="Orders\Commands\UpdateOrder\" />
+    <None Remove="Common\Exceptions\" />
+    <None Remove="Orders\Commands\DeleteOrder\" />
+    <None Remove="Orders\Queries\" />
+    <None Remove="Orders\Queries\GetOrderDetails\" />
+    <None Remove="Orders\Queries\GetOrderList\" />
+    <None Remove="MediatR.Extensions.Microsoft.DependencyInjection" />
+    <None Remove="FluentValidation" />
+    <None Remove="FluentValidation.DependencyInjectionExtensions" />
+    <None Remove="Common\Behaviour\" />
+    <None Remove="Middleware\" />
+    <None Remove="Microsoft.AspNetCore.Http" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+    <Folder Include="Common\" />
+    <Folder Include="Common\Mappings\" />
+    <Folder Include="Orders\" />
+    <Folder Include="Orders\Commands\" />
+    <Folder Include="Orders\Commands\CreateOrder\" />
+    <Folder Include="Orders\Commands\UpdateOrder\" />
+    <Folder Include="Common\Exceptions\" />
+    <Folder Include="Orders\Commands\DeleteOrder\" />
+    <Folder Include="Orders\Queries\" />
+    <Folder Include="Orders\Queries\GetOrderDetails\" />
+    <Folder Include="Orders\Queries\GetOrderList\" />
+    <Folder Include="Common\Behaviour\" />
+    <Folder Include="Middleware\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="FluentValidation" Version="11.2.1" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+  </ItemGroup>
+</Project>

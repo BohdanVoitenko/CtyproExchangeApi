@@ -5,9 +5,13 @@ namespace CryptoExchange.Domain
 	{
         public Guid Id { get; set; }
 
-        public Guid UserId { get; set; }
+        //public string UserId { get; set; }
 
-        public string Exchanger { get; set; }
+        public Guid ExchangerId { get; set; }
+
+        public Exchanger Exchanger { get; set; }
+
+        public string ExchangerName { get; set; }
 
         public string ExchangeFrom { get; set; }
 
@@ -15,7 +19,7 @@ namespace CryptoExchange.Domain
 
         public double IncomeSum { get; set; }
 
-        public int OutcomeSum { get; set; } = 1;
+        public double OutcomeSum { get; set; } = 1.0;
 
         public double Amount { get; set; }
 

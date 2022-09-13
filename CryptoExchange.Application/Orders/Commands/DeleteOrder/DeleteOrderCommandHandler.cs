@@ -15,11 +15,11 @@ namespace CryptoExchange.Application.Orders.Commands.DeleteOrder
         public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
         {
             var entity =
-                await _dbContext.Orders.FindAsync(new object[] { request.Id }, cancellationToken);
+                await _dbContext.Orders.FindAsync(new object[] { request.OrderId }, cancellationToken);
 
-            if(entity == null || entity.UserId != request.UserId)
+            if(entity == null || entity.ExchangerId != request.ExchangerId)
             {
-                throw new NotFoundException(nameof(Order), request.Id);
+                throw new NotFoundException(nameof(Order), request.OrderId);
             }
 
             _dbContext.Orders.Remove(entity);

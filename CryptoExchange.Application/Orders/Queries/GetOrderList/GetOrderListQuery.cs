@@ -5,7 +5,7 @@ namespace CryptoExchange.Application.Orders.Queries.GetOrderList
 {
 	public class GetOrderListQuery : IRequest<OrderListVm>
 	{
-		public Guid UserId { get; set; }
+		public Guid ExchangerId { get; set; }
 	}
 }
 

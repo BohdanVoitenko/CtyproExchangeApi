@@ -5,8 +5,8 @@ namespace CryptoExchange.Application.Orders.Commands.DeleteOrder
 {
 	public class DeleteOrderCommand : IRequest
 	{
-		public Guid Id { get; set; }
-		public Guid UserId { get; set; }
+		public Guid OrderId { get; set; }
+		public Guid ExchangerId { get; set; }
 	}
 }
 

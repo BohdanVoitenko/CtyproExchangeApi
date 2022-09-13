@@ -7,8 +7,8 @@ namespace CryptoExchange.Application.Orders.Queries.GetOrderList
 	{
 		public GetOrderListQueryValidator()
 		{
-			RuleFor(order => order.UserId).NotEqual(Guid.Empty);
-		}
+            RuleFor(order => order.ExchangerId).NotEqual(Guid.Empty);
+        }
 	}
 }
 

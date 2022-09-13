@@ -7,6 +7,7 @@ namespace CryptoExchange.Api.Models
 {
 	public class CreateOrderDto : IMapWith<CreateOrderCommand>
 	{
+		public Guid ExchangerId { get; set; }
 		public string From { get; set; }
 		public string To { get; set; }
 		public double In { get; set; }
@@ -31,7 +32,9 @@ namespace CryptoExchange.Api.Models
 				.ForMember(orderCommand => orderCommand.MinAmount,
 				opt => opt.MapFrom(orderDto => orderDto.MinAmount))
 				.ForMember(orderCommand => orderCommand.MaxAmount,
-				opt => opt.MapFrom(orderDto => orderDto.MaxAmount));
+				opt => opt.MapFrom(orderDto => orderDto.MaxAmount))
+				.ForMember(orderCommand => orderCommand.ExchangerId,
+				opt => opt.MapFrom(orderDto => orderDto.ExchangerId));
 
 		}
 	}

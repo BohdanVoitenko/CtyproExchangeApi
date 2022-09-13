@@ -31,6 +31,19 @@
     <None Remove="Common\Behaviour\" />
     <None Remove="Middleware\" />
     <None Remove="Microsoft.AspNetCore.Http" />
+    <None Remove="UsersAuth\" />
+    <None Remove="UsersAuth\Commands\" />
+    <None Remove="UsersAuth\Commands\CreateUserCommand\" />
+    <None Remove="UsersAuth\Commands\LoginUserCommand\" />
+    <None Remove="Microsoft.AspNetCore.Identity" />
+    <None Remove="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <None Remove="UsersAuth\Commands\LogoutUserCommand\" />
+    <None Remove="Exchangers\" />
+    <None Remove="Exchangers\Commands\" />
+    <None Remove="Orders\Queries\GetOrderListByCoins\" />
+    <None Remove="Orders\Queries\GetAllOrdersQuery\" />
+    <None Remove="Orders\Queries\GetAllOrdersByExchangerQuery\" />
+    <None Remove="Orders\Commands\CreateFromXmlFile\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -47,6 +60,17 @@
     <Folder Include="Orders\Queries\GetOrderList\" />
     <Folder Include="Common\Behaviour\" />
     <Folder Include="Middleware\" />
+    <Folder Include="UsersAuth\" />
+    <Folder Include="UsersAuth\Commands\" />
+    <Folder Include="UsersAuth\Commands\CreateUserCommand\" />
+    <Folder Include="UsersAuth\Commands\LoginUserCommand\" />
+    <Folder Include="UsersAuth\Commands\LogoutUserCommand\" />
+    <Folder Include="Exchangers\" />
+    <Folder Include="Exchangers\Commands\" />
+    <Folder Include="Orders\Queries\GetOrderListByCoins\" />
+    <Folder Include="Orders\Queries\GetAllOrdersQuery\" />
+    <Folder Include="Orders\Queries\GetAllOrdersByExchangerQuery\" />
+    <Folder Include="Orders\Commands\CreateFromXmlFile\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
@@ -56,5 +80,7 @@
     <PackageReference Include="FluentValidation" Version="11.2.1" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.2.1" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
   </ItemGroup>
 </Project>

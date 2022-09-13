@@ -5,7 +5,7 @@ namespace CryptoExchange.Application.Orders.Commands.CreateOrder
 {
 	public class CreateOrderCommand : IRequest<Guid>
 	{
-		public Guid UserId { get; set; }
+		public Guid ExchangerId { get; set; }
 		public Guid OrderId { get; set; }
 		public string From { get; set; }
 		public string To { get; set; }

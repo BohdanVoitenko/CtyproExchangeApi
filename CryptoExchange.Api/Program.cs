@@ -1,12 +1,19 @@
 ﻿using System.Reflection;
+using AutoMapper;
 using CryptoExchange.Application;
 using CryptoExchange.Application.Common.Mappings;
 using CryptoExchange.Application.Interfaces;
 using CryptoExchange.Application.Middleware;
+using CryptoExchange.Application.UsersAuth.Commands;
+using CryptoExchange.Domain;
 using CryptoExchange.Persistence;
+using CryptoExchange.Persistence.EntityTypeConfigurations;
+using MediatR;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CryptoExchangeDbContext>();
 
 builder.Services.AddAutoMapper(config =>
 {
@@ -27,16 +34,17 @@ builder.Services.AddCors(options =>
     });
 });
 
+
 builder.Services.AddScoped<ICryptoExchangeDbContext, CryptoExchangeDbContext>();
+//builder.Services.AddTransient<IUserManager<IdentityUser>, ApplicationUserManager<AppUser>>();
+//builder.Services.AddTransient<ISignInManager<IdentityUser>, ApplicationSignInManager<AppUser>>();
 
 
 
 try
 {
-    // I build a new service provider from the services collection
     using (ServiceProvider serviceProvider = builder.Services.BuildServiceProvider())
     {
-        // Review the FormMain Singleton.
         var context = serviceProvider.GetRequiredService<CryptoExchangeDbContext>();
         DbInitializer.Initialize(context);
     }
@@ -44,36 +52,28 @@ try
 catch(Exception exception)
 {
     var ex = exception.Message;
+    Console.WriteLine(ex);
     var exdata = exception.Data;
 }
-
 
 
 var app = builder.Build();
 
 
-//try
-//{
-//    var context = app.Services.GetRequiredService<CryptoExchangeDbContext>();
-//    var test = context;
-//    DbInitializer.Initialize(context);
-//}
-//catch (Exception exception)
-//{
-//    var ex = exception.Message;
-//    var exdata = exception.Data;
-//}
+
 app.UseCustomExceptionHandler();
 app.UseRouting();
 app.UseHttpsRedirection();
 app.UseCors();
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseEndpoints(options =>
 {
     options.MapControllers();
 });
 
 
-//app.MapGet("/", () => "Hello World!");
 
 app.Run();
 

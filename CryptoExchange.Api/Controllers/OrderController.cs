@@ -1,11 +1,15 @@
 ﻿using System;
 using AutoMapper;
 using CryptoExchange.Api.Models;
+using CryptoExchange.Application.Orders.Commands.CreateFromXmlFile;
 using CryptoExchange.Application.Orders.Commands.CreateOrder;
 using CryptoExchange.Application.Orders.Commands.DeleteOrder;
 using CryptoExchange.Application.Orders.Commands.UpdateOrder;
+using CryptoExchange.Application.Orders.Queries.GetAllOrdersByExchangerQuery;
+using CryptoExchange.Application.Orders.Queries.GetAllOrdersQuery;
 using CryptoExchange.Application.Orders.Queries.GetOrderDetails;
 using CryptoExchange.Application.Orders.Queries.GetOrderList;
+using CryptoExchange.Application.Orders.Queries.GetOrderListByCoins;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoExchange.Api.Controllers
@@ -17,63 +21,70 @@ namespace CryptoExchange.Api.Controllers
 
 		public OrderController(IMapper mapper) => _mapper = mapper;
 
-		[HttpGet]
-		public async Task<ActionResult<OrderListVm>> GetAll()
-		{
-			var query = new GetOrderListQuery
-			{
-				UserId = UserId
-			};
 
-			var vm = Mediator.Send(query);
-			return Ok(200);
-		}
+		[HttpGet("all")]
+		public async Task<ActionResult<AllOrdersVm>> GetAll()
+        {
+			var query = new GetAllOrdersQuery();
 
-		[HttpGet("{id}")]
-		public async Task<ActionResult<OrderDetailsVm>> Get(Guid id)
-		{
-			var query = new GetOrderDetailsQuery
-			{
-				UserId = UserId,
-				Id = id
-			};
+			var vm = await Mediator.Send(query);
+			return Ok(vm);
+        }
 
-			var vm = Mediator.Send(query);
-			return Ok(200);
-		}
+		[HttpGet("allbyexchanger")]
+		public async Task<ActionResult<AllByExchangerVm>> GetAll([FromBody]OrderListByExchangerDto orderListByExchangerDto)
+        {
+			var query = _mapper.Map<AllByExchangerQuery>(orderListByExchangerDto);
 
-		[HttpPost]
+			var vm = await Mediator.Send(query);
+			return Ok(vm);
+        }
+
+		[HttpPost("create")]
 		public async Task<ActionResult<Guid>> Create([FromBody] CreateOrderDto createOrderDto)
         {
 			var command = _mapper.Map<CreateOrderCommand>(createOrderDto);
-			command.UserId = UserId;
+			//command.UserId = UserId;
 			var orderId = await Mediator.Send(command);
 
 			return Ok(orderId);
         }
 
-		[HttpPut]
-		public async Task<ActionResult> Update([FromBody] UpdateOrderDto updateOrderDto)
+		[HttpGet("bycoins")]
+		public async Task<ActionResult<OrderListByCoinsVm>> OrdersByCoins([FromBody] OrdersByCoinsDto ordersByCoinsDto)
         {
-			var command = _mapper.Map<UpdateOrderCommand>(updateOrderDto);
-			command.UserId = UserId;
-			await Mediator.Send(command);
+			var query = _mapper.Map<GetOrderListByCoinsQuery>(ordersByCoinsDto);
 
-			return NoContent();
+			var vm = await Mediator.Send(query);
+			return Ok(vm);
         }
 
-		[HttpDelete("{id}")]
-		public async Task<ActionResult> Delete(Guid id)
+        [HttpPut("update")]
+        public async Task<ActionResult> Update([FromBody] UpdateOrderDto updateOrderDto)
         {
-			var command = new DeleteOrderCommand
-			{
-				UserId = UserId,
-				Id = id
-			};
+            var command = _mapper.Map<UpdateOrderCommand>(updateOrderDto);
+            await Mediator.Send(command);
 
-			await Mediator.Send(command);
-			return NoContent();
+            return NoContent();
         }
-	}
+
+        [HttpDelete("delete")]
+        public async Task<ActionResult> Delete([FromBody]DeleteOrderDto deleteOrderDto)
+        {
+			var command = _mapper.Map<DeleteOrderCommand>(deleteOrderDto);
+
+            await Mediator.Send(command);
+            return NoContent();
+        }
+
+		[HttpPost("createwithxml")]
+		public async Task<ActionResult<OrderListFromXmlVm>> Create([FromBody]CreateOrderListUsingXmlDto createOrderListUsingXmlDto)
+        {
+			var query = _mapper.Map<CreateOrderListCommand>(createOrderListUsingXmlDto);
+
+			var result = await Mediator.Send(query);
+			return Ok(result);
+        }
+    }
 }
 

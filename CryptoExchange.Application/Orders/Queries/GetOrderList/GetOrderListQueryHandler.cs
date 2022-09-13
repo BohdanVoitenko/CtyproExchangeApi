@@ -19,7 +19,7 @@ namespace CryptoExchange.Application.Orders.Queries.GetOrderList
 		public async Task<OrderListVm> Handle(GetOrderListQuery request, CancellationToken cancellationToken)
         {
 			var ordersQuery = await _dbContext.Orders
-				.Where(order => order.UserId == request.UserId)
+				.Where(order => order.ExchangerId == request.ExchangerId)
 				.ProjectTo<OrderListDto>(_mapper.ConfigurationProvider)
 				.ToListAsync(cancellationToken);
 

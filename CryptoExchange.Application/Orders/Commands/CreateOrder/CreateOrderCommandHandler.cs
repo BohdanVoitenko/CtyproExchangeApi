@@ -16,11 +16,16 @@ namespace CryptoExchange.Application.Orders.Commands.CreateOrder
 
         public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
+            var exchanger = _dbContext.Exchangers.FirstOrDefault(e => e.Id == request.ExchangerId);
+
+            if (exchanger == null) throw new Exception($"Cannot find exchanger with id: {request.ExchangerId}");
+
             var order = new Order
             {
-                UserId = request.UserId,
-                ExchangeTo = request.To,
-                ExchangeFrom = request.From,
+                ExchangerId = request.ExchangerId,
+                ExchangerName = exchanger.Name,
+                ExchangeTo = request.To.ToUpper(),
+                ExchangeFrom = request.From.ToUpper(),
                 MaxAmount = request.MaxAmount,
                 MinAmount = request.MinAmount,
                 Amount = request.Amount,
@@ -32,6 +37,10 @@ namespace CryptoExchange.Application.Orders.Commands.CreateOrder
             };
 
             await _dbContext.Orders.AddAsync(order, cancellationToken);
+
+            exchanger.Orders.Add(order);
+
+            _dbContext.Exchangers.Attach(exchanger);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
             return order.Id;

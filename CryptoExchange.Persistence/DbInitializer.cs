@@ -5,7 +5,8 @@ namespace CryptoExchange.Persistence
 	{
 		public static void Initialize(CryptoExchangeDbContext context)
         {
-			context.Database.EnsureCreated();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
         }
 	}
 }

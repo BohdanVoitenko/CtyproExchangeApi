@@ -21,7 +21,7 @@ namespace CryptoExchange.Application.Orders.Queries.GetOrderDetails
         {
             var entity = await _dbContext.Orders.FirstOrDefaultAsync(order => order.Id == request.Id, cancellationToken);
 
-            if(entity == null || entity.UserId != request.UserId)
+            if(entity == null || entity.ExchangerId != request.ExchangerId)
             {
                 throw new NotFoundException(nameof(Order), request.Id);
             }

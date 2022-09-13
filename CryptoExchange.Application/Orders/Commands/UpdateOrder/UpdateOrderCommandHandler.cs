@@ -22,7 +22,7 @@ namespace CryptoExchange.Application.Orders.Commands.UpdateOrder
 				await _dbContext.Orders.FirstOrDefaultAsync(order =>
 				order.Id == request.OrderId, cancellationToken);
 
-			if(entity == null || entity.UserId != request.UserId)
+			if(entity == null || entity.ExchangerId != request.ExchangerId)
             {
 				throw new NotFoundException(nameof(Order), request.OrderId);
             }

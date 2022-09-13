@@ -7,11 +7,11 @@ namespace CryptoExchange.Application.Orders.Commands.DeleteOrder
 	{
 		public DeleteOrderCommandValidator()
 		{
-			RuleFor(deleteOrderCommand =>
-				deleteOrderCommand.UserId).NotEqual(Guid.Empty);
-			RuleFor(deleteOrderCommand =>
-				deleteOrderCommand.Id).NotEqual(Guid.Empty);
-		}
+            RuleFor(deleteOrderCommand =>
+                deleteOrderCommand.ExchangerId).NotEqual(Guid.Empty);
+            RuleFor(deleteOrderCommand =>
+                deleteOrderCommand.OrderId).NotEqual(Guid.Empty);
+        }
 	}
 }
 

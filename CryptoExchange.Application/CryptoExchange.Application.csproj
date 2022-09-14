@@ -44,6 +44,14 @@
     <None Remove="Orders\Queries\GetAllOrdersQuery\" />
     <None Remove="Orders\Queries\GetAllOrdersByExchangerQuery\" />
     <None Remove="Orders\Commands\CreateFromXmlFile\" />
+    <None Remove="Microsoft.Extensions.Caching.StackExchangeRedis" />
+    <None Remove="Common\Caching\" />
+    <None Remove="Microsoft.Extensions.Configuration" />
+    <None Remove="Microsoft.AspNetCore" />
+    <None Remove="Microsoft.Extensions.Configuration.Binder" />
+    <None Remove="Microsoft.AspNetCore.Mvc.Abstractions" />
+    <None Remove="Newtonsoft.Json" />
+    <None Remove="Microsoft.AspNetCore.Mvc" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -71,6 +79,7 @@
     <Folder Include="Orders\Queries\GetAllOrdersQuery\" />
     <Folder Include="Orders\Queries\GetAllOrdersByExchangerQuery\" />
     <Folder Include="Orders\Commands\CreateFromXmlFile\" />
+    <Folder Include="Common\Caching\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
@@ -82,5 +91,11 @@
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.8" />
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="6.0.9" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
   </ItemGroup>
 </Project>

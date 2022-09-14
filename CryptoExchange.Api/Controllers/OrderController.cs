@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoMapper;
 using CryptoExchange.Api.Models;
+using CryptoExchange.Application.Common.Caching;
 using CryptoExchange.Application.Orders.Commands.CreateFromXmlFile;
 using CryptoExchange.Application.Orders.Commands.CreateOrder;
 using CryptoExchange.Application.Orders.Commands.DeleteOrder;
@@ -23,6 +24,7 @@ namespace CryptoExchange.Api.Controllers
 
 
 		[HttpGet("all")]
+        [Cached(60)]
 		public async Task<ActionResult<AllOrdersVm>> GetAll()
         {
 			var query = new GetAllOrdersQuery();
@@ -51,6 +53,7 @@ namespace CryptoExchange.Api.Controllers
         }
 
 		[HttpGet("bycoins")]
+		[Cached(600)]
 		public async Task<ActionResult<OrderListByCoinsVm>> OrdersByCoins([FromBody] OrdersByCoinsDto ordersByCoinsDto)
         {
 			var query = _mapper.Map<GetOrderListByCoinsQuery>(ordersByCoinsDto);

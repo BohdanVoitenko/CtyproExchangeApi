@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using AutoMapper;
 using CryptoExchange.Application;
+using CryptoExchange.Application.Common.Caching;
 using CryptoExchange.Application.Common.Mappings;
 using CryptoExchange.Application.Interfaces;
 using CryptoExchange.Application.Middleware;
@@ -14,13 +15,19 @@ using Microsoft.AspNetCore.Identity;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CryptoExchangeDbContext>();
-
 builder.Services.AddAutoMapper(config =>
 {
     config.AddProfile(new AssemblyMappingProfile(Assembly.GetExecutingAssembly()));
     config.AddProfile(new AssemblyMappingProfile(typeof(ICryptoExchangeDbContext).Assembly));
 });
 builder.Services.AddApplication();
+
+var installers = typeof(Program).Assembly.ExportedTypes.Where(x =>
+typeof(IInstaller).IsAssignableFrom(x) && !x.IsInterface && !x.IsAbstract).Select(Activator.CreateInstance)
+.Cast<IInstaller>().ToList();
+
+installers.ForEach(installer => installer.InstallServices(builder.Services, builder.Configuration));
+
 builder.Services.AddPersistence(builder.Configuration);
 builder.Services.AddControllers();
 

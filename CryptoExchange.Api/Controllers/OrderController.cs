@@ -34,6 +34,7 @@ namespace CryptoExchange.Api.Controllers
         }
 
 		[HttpGet("allbyexchanger")]
+        [Cached(60)]
 		public async Task<ActionResult<AllByExchangerVm>> GetAll([FromBody]OrderListByExchangerDto orderListByExchangerDto)
         {
 			var query = _mapper.Map<AllByExchangerQuery>(orderListByExchangerDto);

@@ -1,8 +1,10 @@
 ﻿using System;
+using CryptoExchange.Application.Common.Exceptions;
 using CryptoExchange.Application.Interfaces;
 using CryptoExchange.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace CryptoExchange.Application.Exchangers.Commands
@@ -10,19 +12,19 @@ namespace CryptoExchange.Application.Exchangers.Commands
 	public class CreateExchangerCommandHandler : IRequestHandler<CreateExchangerCommand, Guid>
 	{
 		private readonly ICryptoExchangeDbContext _dbContext;
-		private readonly UserManager<AppUser> _userManager;
-		private readonly ILogger<CreateExchangerCommandHandler> _logger;
+		//private readonly UserManager<AppUser> _userManager;
 
-		public CreateExchangerCommandHandler(ICryptoExchangeDbContext dbContext, UserManager<AppUser> userManager,
-			ILogger<CreateExchangerCommandHandler> logger)
-			=> (_dbContext, _userManager, _logger) = (dbContext, userManager, logger);
+
+		public CreateExchangerCommandHandler(ICryptoExchangeDbContext dbContext)
+			=> _dbContext = dbContext;
 
 		public async Task<Guid> Handle(CreateExchangerCommand request, CancellationToken cancellationToken)
         {
 
-			var user = await _userManager.FindByIdAsync(request.UserId);
+			//var user = await _userManager.FindByIdAsync(request.UserId);
+			var user = await _dbContext.Users.FirstOrDefaultAsync(user => user.Id == request.UserId);
 
-			if (user == null) throw new Exception($"Cannot find with id: {request.UserId}");
+			if (user == null) throw new NotFoundException(nameof(AppUser), request.UserId);
 
 			var exchanger = new Exchanger
 			{

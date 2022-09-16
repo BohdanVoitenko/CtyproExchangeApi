@@ -43,9 +43,6 @@ builder.Services.AddCors(options =>
 
 
 builder.Services.AddScoped<ICryptoExchangeDbContext, CryptoExchangeDbContext>();
-//builder.Services.AddTransient<IUserManager<IdentityUser>, ApplicationUserManager<AppUser>>();
-//builder.Services.AddTransient<ISignInManager<IdentityUser>, ApplicationSignInManager<AppUser>>();
-
 
 
 try

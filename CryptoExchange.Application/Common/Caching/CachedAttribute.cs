@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 
 namespace CryptoExchange.Application.Common.Caching
 {
@@ -28,8 +29,10 @@ namespace CryptoExchange.Application.Common.Caching
             }
 
             var cacheService = context.HttpContext.RequestServices.GetRequiredService<IResponseCacheService>();
+            
+            var cacheKey = GenerateCacheKeyFromRequest(context);
 
-            var cacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
+            
             var cachedResponse = await cacheService.GetCachedResponseAsync(cacheKey);
             if (!string.IsNullOrEmpty(cachedResponse)){
                 var contentResult = new ContentResult
@@ -51,15 +54,20 @@ namespace CryptoExchange.Application.Common.Caching
 
         }
 
-        private static string GenerateCacheKeyFromRequest(HttpRequest request)
+        private static string GenerateCacheKeyFromRequest(ActionExecutingContext context)
         {
             var keyBuilder = new StringBuilder();
 
-            keyBuilder.Append($"{request.Path}");
+            keyBuilder.Append($"{context.HttpContext.Request.Path}");
 
-            foreach(var (key, value) in request.Query.OrderBy(x => x.Key))
+            foreach(var (key, value) in context.HttpContext.Request.Query.OrderBy(x => x.Key))
             {
                 keyBuilder.Append($"|{key}-{value}");
+            }
+
+            if(context.ActionArguments.Count >= 1)
+            {
+                keyBuilder.Append(JsonConvert.SerializeObject(context.ActionArguments.ToList()[0].Value));
             }
 
             return keyBuilder.ToString();

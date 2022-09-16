@@ -12,7 +12,7 @@ namespace CryptoExchange.Application.Orders.Queries.GetOrderDetails
         public string ExchangeFrom { get; set; }
         public string ExchangeTo { get; set; }
         public double IncomeSum { get; set; }
-        public int OutcomeSum { get; set; } = 1;
+        public double OutcomeSum { get; set; }
         public double Amount { get; set; }
         public double MinAmount { get; set; }
         public double MaxAmount { get; set; }
@@ -39,7 +39,9 @@ namespace CryptoExchange.Application.Orders.Queries.GetOrderDetails
                 .ForMember(orderVm => orderVm.CreationTime,
                 opt => opt.MapFrom(order => order.CreationTime))
                 .ForMember(orderVm => orderVm.EditTime,
-                opt => opt.MapFrom(order => order.EditTime));
+                opt => opt.MapFrom(order => order.EditTime))
+                .ForMember(orderVm => orderVm.Exchanger,
+                opt => opt.MapFrom(order => order.Exchanger.Name));
 
 
         }

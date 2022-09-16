@@ -52,6 +52,9 @@
     <None Remove="Microsoft.AspNetCore.Mvc.Abstractions" />
     <None Remove="Newtonsoft.Json" />
     <None Remove="Microsoft.AspNetCore.Mvc" />
+    <None Remove="Exchangers\Queries\" />
+    <None Remove="Exchangers\Commands\CreateExchanger\" />
+    <None Remove="Exchangers\Commands\DeleteAllOrders\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -80,6 +83,9 @@
     <Folder Include="Orders\Queries\GetAllOrdersByExchangerQuery\" />
     <Folder Include="Orders\Commands\CreateFromXmlFile\" />
     <Folder Include="Common\Caching\" />
+    <Folder Include="Exchangers\Queries\" />
+    <Folder Include="Exchangers\Commands\CreateExchanger\" />
+    <Folder Include="Exchangers\Commands\DeleteAllOrders\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />

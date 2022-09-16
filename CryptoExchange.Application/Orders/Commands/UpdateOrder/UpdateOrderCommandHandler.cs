@@ -2,8 +2,11 @@
 using CryptoExchange.Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using CryptoExchange.Application.Common.Exceptions;
 using CryptoExchange.Domain;
+using System.Data;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CryptoExchange.Application.Orders.Commands.UpdateOrder
 {
@@ -36,6 +39,9 @@ namespace CryptoExchange.Application.Orders.Commands.UpdateOrder
 			entity.MaxAmount = request.MaxAmount;
 			entity.EditTime = DateTime.Now;
 
+			var changedEntity = _dbContext.Orders.Attach(entity);
+			changedEntity.State = EntityState.Modified;
+			
 			await _dbContext.SaveChangesAsync(cancellationToken);
 
 			return Unit.Value;

@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoExchange.Api.Controllers
 {
-	[Route("api/[controller]")]
+    [Produces("application/json")]
+    [Route("api/[controller]")]
 	[Authorize]
 	public class ExchangerController : BaseController
 	{
@@ -19,8 +20,30 @@ namespace CryptoExchange.Api.Controllers
 
 		public ExchangerController(IMapper mapper) => _mapper = mapper;
 
-		[HttpPost("create")]
-		public async Task<ActionResult<Guid>> Create([FromBody]CreateExchangerDto createExchangerDto)
+
+        /// <summary>
+        /// Create new exchanger
+        /// </summary>
+        /// <remarks>
+        ///	Sample request:
+        ///	POST exchanger/create
+        ///	{
+        ///	    "UserId":"2a562f06-934b-4093-b698-2d7093c62e17",
+        ///	    "Name":"SomeExchange",
+        ///	    "WebResourceUrl":"https://exampleurl.com"
+        ///	}
+        /// </remarks>
+        /// <param name="createExchangerDto">CreateExchangerDto object</param>
+        /// <returns>Returns OkObjectResult</returns>
+        /// <response code="201">Success</response>
+        /// <response code="400">Bad request</response>
+        /// <response code="404">User is unaithorized</response>
+        [Authorize]
+        [HttpPost("create")]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Guid>> Create([FromBody]CreateExchangerDto createExchangerDto)
         {
 			var command = _mapper.Map<CreateExchangerCommand>(createExchangerDto);
 
@@ -29,19 +52,56 @@ namespace CryptoExchange.Api.Controllers
 			return Ok(exchangerId);
         }
 
-        [HttpGet("exchangerInfo")]
+        /// <summary>
+        /// Gets information about exchanger
+        /// </summary>
+        /// <param name="exchangerName">string with exchanger's name</param>
+        /// <remarks>
+        /// Sample request:
+        /// GET exchanger/info/SomeExchanger
+        /// </remarks>
+        /// <response code="200">Success</response>
+        /// <response code="400">Bad request</response>
+        /// <response code="404">User is unauthorized</response>
+        /// <returns></returns>
+        [Authorize]
+        [HttpGet("{exchangerName}")]
         [Cached(60)]
-		public async Task<ActionResult<ExchangerInfoVm>> GetInfo([FromBody] ExchangerInfoDto exchangerInfoDto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ExchangerInfoVm>> GetInfo(string exchangerName)
         {
-			var query = _mapper.Map<GetExchangerInfoQuery>(exchangerInfoDto);
+			var exchangerInfoDto = new ExchangerInfoDto { Exchanger = exchangerName };
+
+            var query = _mapper.Map<GetExchangerInfoQuery>(exchangerInfoDto);
 
 			var result = await Mediator.Send(query);
 
 			return Ok(result);
         }
 
+        /// <summary>
+        /// Delete all exchanger's orders
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        /// DELETE exchanger/deleteAllOrders
+        /// {
+        ///     "ExchangerId":"5b1327b7-79d6-429c-9be2-fc81642ab639"
+        /// }
+        /// </remarks>
+        /// <param name="deleteOrdersdto">DeleteAllOrdersForExchangerDto object</param>
+        /// <returns>Returns OkResult</returns>
+        /// <response code="200">Success</response>
+        /// <response code="400">Bad request</response>
+        /// <response code="404">User is unauthorized</response>
+        [Authorize]
         [HttpDelete("deleteAllOrders")]
-		public async Task<ActionResult> DeleteAll([FromBody]DeleteAllOrdersForExchangerDto deleteOrdersdto)
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> DeleteAll([FromBody]DeleteAllOrdersForExchangerDto deleteOrdersdto)
         {
 			var command = _mapper.Map<DeleteAllOrdersCommand>(deleteOrdersdto);
 

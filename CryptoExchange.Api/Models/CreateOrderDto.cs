@@ -11,7 +11,7 @@ namespace CryptoExchange.Api.Models
 		public string From { get; set; }
 		public string To { get; set; }
 		public double In { get; set; }
-		public int Out { get; set; } = 1;
+		public double Out { get; set; } = 1;
 		public double Amount { get; set; }
 		public double MinAmount { get; set; }
 		public double MaxAmount { get; set; }

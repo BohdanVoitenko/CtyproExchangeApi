@@ -4,35 +4,46 @@ using MediatR;
 using CryptoExchange.Application.Interfaces;
 using CryptoExchange.Domain;
 using Microsoft.Extensions.Logging;
+using CryptoExchange.Application.Common.JwtAuthentication;
 
 namespace CryptoExchange.Application.UsersAuth.Commands.LoginUserCommand
 {
-	public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, string>
+	public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, AuthResult>
 	{
 		private readonly SignInManager<AppUser> _signInManager;
 		private readonly UserManager<AppUser> _userManager;
-		private readonly ILogger<LoginUserCommandHandler> _logger;
+		private readonly IAuthService _authService;
 
-		public LoginUserCommandHandler(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager,
-			ILogger<LoginUserCommandHandler> logger)
-			=> (_signInManager, _userManager, _logger) = (signInManager, userManager, logger);
+		public LoginUserCommandHandler(SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, IAuthService authService)
+			=> (_signInManager, _userManager, _authService) = (signInManager, userManager, authService);
 
-		public async Task<string> Handle(LoginUserCommand request, CancellationToken cancellationToken)
-        {
-			var user = await _userManager.FindByIdAsync(request.Id);
+		public async Task<AuthResult> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+		{
+			var user = await _userManager.FindByEmailAsync(request.Email);
 
-			if (user == null) throw new Exception($"Cannot find user with id = {request.Id}");
+			if (user == null) throw new Exception($"Cannot find user with email = {request.Email}");
 
-			var result = await _signInManager.PasswordSignInAsync(user, request.Password, false, false);
+			var checkPasswordResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
-            if (!result.Succeeded)
-            {
-				_logger.LogError(result.ToString());
-				throw new Exception("Invalid sign in attempt");
-            }
 
-			return user.UserName;
-        }
+			if (checkPasswordResult.Succeeded)
+			{
+				var token = _authService.GenerateJwtToken(user);
+
+				return new AuthResult
+				{
+					Success = true,
+					Token = token,
+					UserId = user.Id
+				};
+			}
+
+			return new AuthResult
+			{
+				Success = false,
+				Error = "Invalid login data"
+			};
+		}
 	}
 }
 

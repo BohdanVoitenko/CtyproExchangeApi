@@ -39,6 +39,8 @@
     <None Remove="Exchangers\" />
     <None Remove="Exchangers\Commands\" />
     <None Remove="Exchangers\Queries\" />
+    <None Remove="Authorization\" />
+    <None Remove="Authorization\Commands\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Common\" />
@@ -48,5 +50,7 @@
     <Folder Include="Exchangers\" />
     <Folder Include="Exchangers\Commands\" />
     <Folder Include="Exchangers\Queries\" />
+    <Folder Include="Authorization\" />
+    <Folder Include="Authorization\Commands\" />
   </ItemGroup>
 </Project>

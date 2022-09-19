@@ -37,12 +37,12 @@ namespace CryptoExchange.Api.Controllers
         /// <returns>Returns OkObjectResult</returns>
         /// <response code="201">Success</response>
         /// <response code="400">Bad request</response>
-        /// <response code="404">User is unaithorized</response>
+        /// <response code="401">User is unaithorized</response>
         [Authorize]
         [HttpPost("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<Guid>> Create([FromBody]CreateExchangerDto createExchangerDto)
         {
 			var command = _mapper.Map<CreateExchangerCommand>(createExchangerDto);
@@ -62,14 +62,14 @@ namespace CryptoExchange.Api.Controllers
         /// </remarks>
         /// <response code="200">Success</response>
         /// <response code="400">Bad request</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
         /// <returns></returns>
         [Authorize]
         [HttpGet("{exchangerName}")]
         [Cached(60)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<ExchangerInfoVm>> GetInfo(string exchangerName)
         {
 			var exchangerInfoDto = new ExchangerInfoDto { Exchanger = exchangerName };
@@ -95,12 +95,12 @@ namespace CryptoExchange.Api.Controllers
         /// <returns>Returns OkResult</returns>
         /// <response code="200">Success</response>
         /// <response code="400">Bad request</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
         [Authorize]
         [HttpDelete("deleteAllOrders")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult> DeleteAll([FromBody]DeleteAllOrdersForExchangerDto deleteOrdersdto)
         {
 			var command = _mapper.Map<DeleteAllOrdersCommand>(deleteOrdersdto);

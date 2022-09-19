@@ -11,7 +11,7 @@ namespace CryptoExchange.Application.Orders.Commands.CreateFromXmlFile
 		public string ExchangerName { get; set; }
 		public string From { get; set; }
 		public string To { get; set; }
-		public int In { get; set; } = 1;
+		public double In { get; set; } = 1;
 		public double Out { get; set; }
 		public double Amount { get; set; }
 		public double MinAmount { get; set; }

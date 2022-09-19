@@ -35,11 +35,11 @@ namespace CryptoExchange.Api.Controllers
         /// </remarks>
         /// <returns>Returns AllOrdersVm</returns>
         /// <response code="200">Succes</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
         [HttpGet("all")]
         [Cached(60)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		public async Task<ActionResult<AllOrdersVm>> GetAll()
         {
 			var query = new GetAllOrdersQuery();
@@ -62,12 +62,14 @@ namespace CryptoExchange.Api.Controllers
         /// <param name="orderListByExchangerDto">OrderListByExchangerDto object</param>
         /// <returns>Returns AllByExchangerVm</returns>
         /// <response code="200">Success</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
+        /// <response code="400">Bad request/validation failed</response>
 		[HttpGet("allbyexchanger")]
         [Cached(60)]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<ActionResult<AllByExchangerVm>> GetAll(Guid Id)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<AllByExchangerVm>> GetAll(Guid Id)
         {
             var orderListByExchangerDto = new OrderListByExchangerDto { ExchangerId = Id };
 
@@ -97,11 +99,13 @@ namespace CryptoExchange.Api.Controllers
         /// <param name="createOrderDto">CreateOrderDtp object</param>
         /// <returns>Returns id (guid)</returns>
         /// <response code="201">Success</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
+        /// <response code="400">Bad request/validation failed</response>
 		[HttpPost("create")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-		public async Task<ActionResult<Guid>> Create([FromBody] CreateOrderDto createOrderDto)
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<Guid>> Create([FromBody] CreateOrderDto createOrderDto)
         {
 			var command = _mapper.Map<CreateOrderCommand>(createOrderDto);
 			//command.UserId = UserId;
@@ -125,12 +129,13 @@ namespace CryptoExchange.Api.Controllers
         /// <param name="coinTo">String with coin name</param>
         /// <returns>OrderListByCoinsVm</returns>
         /// <response code="200">Success</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
+        /// <response code="400">Bad request/validation failed</response>
 		[HttpGet("{coinFrom}-{coinTo}")]
 		[Cached(600)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public async Task<ActionResult<OrderListByCoinsVm>> OrdersByCoins(string coinFrom, string coinTo)
         {
             var ordersByCoinsDto = new OrdersByCoinsDto { From = coinFrom, To = coinTo };
@@ -161,10 +166,12 @@ namespace CryptoExchange.Api.Controllers
         /// <param name="updateOrderDto">UpdateOrderDto object</param>
         /// <returns>Returns NoContent</returns>
         /// <response code="204">Success</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
+        /// <response code="400">Bad request/validation failed</response>
         [HttpPut("update")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Update([FromBody] UpdateOrderDto updateOrderDto)
         {
             var command = _mapper.Map<UpdateOrderCommand>(updateOrderDto);
@@ -183,10 +190,12 @@ namespace CryptoExchange.Api.Controllers
         /// <param name="orderId">Id of exhcanger's order</param>
         /// <returns>Returns NoContent</returns>
         /// <response code="204">Success</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
+        /// <response code="400">Bad request/validation failed</response>
         [HttpDelete("{exchangerId}/{orderId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult> Delete(Guid exchangerId, Guid orderId)
         {
             var deleteOrderDto = new DeleteOrderDto { ExchangerId = exchangerId, OrderId = orderId };
@@ -211,10 +220,12 @@ namespace CryptoExchange.Api.Controllers
         /// <param name="createOrderListUsingXmlDto">CreateOrderListUsingXmlDto object</param>
         /// <returns>Returns OrderListFromXmlVm</returns>
         /// <response code="201">Success</response>
-        /// <response code="404">User is unauthorized</response>
+        /// <response code="401">User is unauthorized</response>
+        /// <response code="400">Bad request/validation failed</response>
 		[HttpPost("createwithxml")]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<OrderListFromXmlVm>> Create([FromBody]CreateOrderListUsingXmlDto createOrderListUsingXmlDto)
         {
 			var query = _mapper.Map<CreateOrderListCommand>(createOrderListUsingXmlDto);

@@ -2,10 +2,12 @@
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using AutoMapper;
+using CryptoExchange.Application.Common.Exceptions;
 using CryptoExchange.Application.Interfaces;
 using CryptoExchange.Domain;
 using FluentValidation.TestHelper;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CryptoExchange.Application.Orders.Commands.CreateFromXmlFile
 {
@@ -22,9 +24,11 @@ namespace CryptoExchange.Application.Orders.Commands.CreateFromXmlFile
             List<Order> orders = new List<Order>();
             var list = new List<OrderDto>();
 
-            XDocument xdoc1 = XDocument.Load(request.FilePath);
+            try
+            {
+                XDocument xdoc1 = XDocument.Load(request.FilePath);
 
-            orders =
+                orders =
                (from _order in xdoc1.Element("orders").Elements("order")
                 select new Order
                 {
@@ -36,8 +40,22 @@ namespace CryptoExchange.Application.Orders.Commands.CreateFromXmlFile
                     MinAmount = ((double)_order.Element("minamount")),
                     MaxAmount = ((double)_order.Element("maxamount"))
                 }).ToList();
+            }
+            catch(Exception exception)
+            {
+                return new OrderListFromXmlVm
+                {
+                    Success = false,
+                    Error = exception.Message
+                };
+            }
 
             var exchanger = _dbContext.Exchangers.FirstOrDefault(ex => ex.Id == request.ExchangerId);
+
+            if(exchanger == null)
+            {
+                throw new NotFoundException(nameof(Exchanger), request.ExchangerId);
+            }
 
             foreach (var order in orders)
             {
@@ -51,7 +69,7 @@ namespace CryptoExchange.Application.Orders.Commands.CreateFromXmlFile
             _dbContext.Orders.AddRange(orders);
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return new OrderListFromXmlVm { Orders = list};
+            return new OrderListFromXmlVm { Orders = list, Success = true };
         }
 	}
 }

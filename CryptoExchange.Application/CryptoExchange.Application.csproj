@@ -37,7 +37,6 @@
     <None Remove="UsersAuth\Commands\LoginUserCommand\" />
     <None Remove="Microsoft.AspNetCore.Identity" />
     <None Remove="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
-    <None Remove="UsersAuth\Commands\LogoutUserCommand\" />
     <None Remove="Exchangers\" />
     <None Remove="Exchangers\Commands\" />
     <None Remove="Orders\Queries\GetOrderListByCoins\" />
@@ -55,6 +54,9 @@
     <None Remove="Exchangers\Queries\" />
     <None Remove="Exchangers\Commands\CreateExchanger\" />
     <None Remove="Exchangers\Commands\DeleteAllOrders\" />
+    <None Remove="Common\JwtAuthentication\" />
+    <None Remove="System.IdentityModel.Tokens.Jwt" />
+    <None Remove="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -75,7 +77,6 @@
     <Folder Include="UsersAuth\Commands\" />
     <Folder Include="UsersAuth\Commands\CreateUserCommand\" />
     <Folder Include="UsersAuth\Commands\LoginUserCommand\" />
-    <Folder Include="UsersAuth\Commands\LogoutUserCommand\" />
     <Folder Include="Exchangers\" />
     <Folder Include="Exchangers\Commands\" />
     <Folder Include="Orders\Queries\GetOrderListByCoins\" />
@@ -86,6 +87,7 @@
     <Folder Include="Exchangers\Queries\" />
     <Folder Include="Exchangers\Commands\CreateExchanger\" />
     <Folder Include="Exchangers\Commands\DeleteAllOrders\" />
+    <Folder Include="Common\JwtAuthentication\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />
@@ -103,5 +105,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Abstractions" Version="2.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.23.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4" />
   </ItemGroup>
 </Project>

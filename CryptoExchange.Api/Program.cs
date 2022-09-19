@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Text;
 using AutoMapper;
 using CryptoExchange.Application;
 using CryptoExchange.Application.Common.Caching;
@@ -11,12 +12,39 @@ using CryptoExchange.Persistence;
 using CryptoExchange.Persistence.EntityTypeConfigurations;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CryptoExchangeDbContext>();
+builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CryptoExchangeDbContext>()
+    .AddDefaultTokenProviders();
+
+// 3. Adding Authentication
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+
+// 4. Adding Jwt Bearer
+    .AddJwtBearer(options =>
+    {
+        options.SaveToken = true;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidAudience = builder.Configuration["JwtSettings:Issuer"],
+            ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]))
+        };
+    });
+
 builder.Services.ConfigureApplicationCookie(o =>
 {
     o.Events = new CookieAuthenticationEvents()
@@ -105,10 +133,12 @@ builder.Services.AddSwaggerGen(config =>
 
                     }
                 });
-});
+});  
+
 
 
 builder.Services.AddScoped<ICryptoExchangeDbContext, CryptoExchangeDbContext>();
+builder.Services.AddSingleton(builder.Configuration);
 
 
 try

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection;
 using CryptoExchange.Application.Common.Behaviour;
+using CryptoExchange.Application.Common.JwtAuthentication;
+using CryptoExchange.Application.Interfaces;
 using CryptoExchange.Domain;
 using FluentValidation;
 using MediatR;
@@ -18,6 +20,7 @@ namespace CryptoExchange.Application
 			services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() });
 			services.AddTransient(typeof(IPipelineBehavior<,>),
 				typeof(ValidationBehavior<,>));
+			services.AddSingleton<IAuthService, JwtAuthService>();
 
 			return services;
         }

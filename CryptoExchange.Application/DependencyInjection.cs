@@ -2,6 +2,7 @@
 using System.Reflection;
 using CryptoExchange.Application.Common.Behaviour;
 using CryptoExchange.Application.Common.JwtAuthentication;
+using CryptoExchange.Application.Common.UserService;
 using CryptoExchange.Application.Interfaces;
 using CryptoExchange.Domain;
 using FluentValidation;
@@ -21,6 +22,7 @@ namespace CryptoExchange.Application
 			services.AddTransient(typeof(IPipelineBehavior<,>),
 				typeof(ValidationBehavior<,>));
 			services.AddSingleton<IAuthService, JwtAuthService>();
+			services.AddTransient<IUserService, UserService>();
 
 			return services;
         }

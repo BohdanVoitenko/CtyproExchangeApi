@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace CryptoExchange.Application.Orders.Commands.UpdateOrder
 {
-	public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand>
+	public class UpdateOrderCommandHandler : IRequestHandler<UpdateOrderCommand, UpdateOrderResultVm>
 	{
 		private readonly ICryptoExchangeDbContext _dbContext;
 
@@ -19,7 +19,7 @@ namespace CryptoExchange.Application.Orders.Commands.UpdateOrder
 			_dbContext = dbContext;
 		}
 
-		public async Task<Unit> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
+		public async Task<UpdateOrderResultVm> Handle(UpdateOrderCommand request, CancellationToken cancellationToken)
         {
 			var entity =
 				await _dbContext.Orders.FirstOrDefaultAsync(order =>
@@ -41,10 +41,22 @@ namespace CryptoExchange.Application.Orders.Commands.UpdateOrder
 
 			var changedEntity = _dbContext.Orders.Attach(entity);
 			changedEntity.State = EntityState.Modified;
-			
-			await _dbContext.SaveChangesAsync(cancellationToken);
 
-			return Unit.Value;
+            try
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+			catch(Exception exception)
+            {
+				return new UpdateOrderResultVm
+				{
+					Success = false,
+					Error = exception.Message
+				};
+            }
+
+
+			return new UpdateOrderResultVm { Success = true };
         }
 	}
 }

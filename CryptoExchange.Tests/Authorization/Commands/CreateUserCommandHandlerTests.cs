@@ -34,24 +34,12 @@ namespace CryptoExchange.Tests.Authorization.Commands
         public async Task CreateUserCommandHandlerTests_Succes()
         {
             //Arrange
-            var dummyUser = new AppUser
-            {
-                UserName = "Thomas",
-                Email = "sometest@gmail.com",
-                Password = "Thomas123."
-            };
             var userEmail = "sometest@gmail.com";
             var userName = "Thomas";
             var password = "Thomas123.";
 
-            var mock = new Mock<IUserStore<AppUser>>();
             var userManager = MockHelper.TestUserManager<AppUser>();
 
-            var mock2 = new Mock<UserManager<AppUser>>();
-           
-            mock2.Setup(m => m.CreateAsync(dummyUser, dummyUser.Password)).Returns(Task.FromResult<IdentityResult>);
-            mock2.Setup(m => m.FindByEmailAsync(It.IsAny<string>())).Returns(Task.FromResult<AppUser>);
-            mock2.Setup(m => m.FindByNameAsync(It.IsAny<string>())).Returns(Task.FromResult<AppUser>);
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.Key));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
@@ -68,7 +56,7 @@ namespace CryptoExchange.Tests.Authorization.Commands
                 expires: DateTime.Now.AddMinutes(20),
                 signingCredentials: credentials)));
 
-            var handler = new CreateUserCommandHandler(mock2.Object, mockAuthService.Object);
+            var handler = new CreateUserCommandHandler(userManager, mockAuthService.Object);
 
             //Act
             var result = await handler.Handle(new CreateUserCommand

@@ -16,8 +16,16 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 builder.Services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<CryptoExchangeDbContext>()
     .AddDefaultTokenProviders();
@@ -139,6 +147,7 @@ builder.Services.AddSwaggerGen(config =>
 
 builder.Services.AddScoped<ICryptoExchangeDbContext, CryptoExchangeDbContext>();
 builder.Services.AddSingleton(builder.Configuration);
+builder.Services.AddHttpContextAccessor();
 
 
 try

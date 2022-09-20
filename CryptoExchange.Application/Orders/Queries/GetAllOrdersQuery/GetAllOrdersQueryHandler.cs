@@ -18,7 +18,7 @@ namespace CryptoExchange.Application.Orders.Queries.GetAllOrdersQuery
 
 		public async Task<AllOrdersVm> Handle(GetAllOrdersQuery request, CancellationToken cancellationToken)
         {
-			var ordersQuery = await _dbContext.Orders.Where(order => order.Id != Guid.Empty).ProjectTo<AllOrdersDto>(_mapper.ConfigurationProvider)
+			var ordersQuery = await _dbContext.Orders.Where(order => order.Id != Guid.Empty).AsNoTracking().ProjectTo<AllOrdersDto>(_mapper.ConfigurationProvider)
 				.ToListAsync(cancellationToken);
 
 			return new AllOrdersVm { Orders = ordersQuery };

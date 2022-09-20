@@ -6,13 +6,13 @@ using MediatR;
 
 namespace CryptoExchange.Application.Orders.Commands.DeleteOrder
 {
-	public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
+	public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand, DeleteOrderResultVm>
 	{
         private readonly ICryptoExchangeDbContext _dbContext;
 
         public DeleteOrderCommandHandler(ICryptoExchangeDbContext dbContext) => _dbContext = dbContext;
 
-        public async Task<Unit> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
+        public async Task<DeleteOrderResultVm> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
         {
             var entity =
                 await _dbContext.Orders.FindAsync(new object[] { request.OrderId }, cancellationToken);
@@ -23,9 +23,21 @@ namespace CryptoExchange.Application.Orders.Commands.DeleteOrder
             }
 
             _dbContext.Orders.Remove(entity);
-            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return Unit.Value;
+            try
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch(Exception exception)
+            {
+                return new DeleteOrderResultVm
+                {
+                    Success = false,
+                    Error = exception.Message
+                };
+            }
+
+            return new DeleteOrderResultVm { Success = true };
         }
     }
 }

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CryptoExchange.Application.Orders.Commands.UpdateOrder
 {
-	public class UpdateOrderCommand : IRequest
+	public class UpdateOrderCommand : IRequest<UpdateOrderResultVm>
 	{
 		public Guid ExchangerId { get; set; }
 		public Guid OrderId { get; set; }

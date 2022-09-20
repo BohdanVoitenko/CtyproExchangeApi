@@ -3,6 +3,7 @@ using CryptoExchange.Application.Orders.Commands.CreateOrder;
 using CryptoExchange.Domain;
 using CryptoExchange.Tests.Common;
 using Microsoft.EntityFrameworkCore;
+using Shouldly;
 
 namespace CryptoExchange.Tests.Orders.Commands
 {
@@ -24,7 +25,7 @@ namespace CryptoExchange.Tests.Orders.Commands
             var maxamount = 4;
 
             //Act
-            var orderId = await handler.Handle(
+            var result = await handler.Handle(
                     new CreateOrderCommand
                     {
                         ExchangerId = exchangerId,
@@ -42,8 +43,10 @@ namespace CryptoExchange.Tests.Orders.Commands
 
 
             //Assert
-            Assert.NotNull(
-                await Context.Orders.SingleOrDefaultAsync(order => order.Id == orderId));
+            //Assert.NotNull(
+            //    await Context.Orders.SingleOrDefaultAsync(order => order.Id == orderId));
+            result.ShouldBeOfType<CreateOrderResultVm>();
+            result.OrderId.ShouldNotBe(Guid.Empty);
 
 
         }

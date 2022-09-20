@@ -21,13 +21,28 @@ namespace CryptoExchange.Application.Orders.Queries.GetAllOrdersByExchangerQuery
         {
 			var exhcanger = _dbContext.Exchangers.Where(exhcanger => exhcanger.Id == request.ExchangerId).SingleOrDefault();
 			if (exhcanger == null) throw new NotFoundException(nameof(Exchanger), request.ExchangerId);
+			var requestQuery = new List<AllByExchangerDto>();
 
-			var requestQuery = await _dbContext.Orders
-				.Where(order => order.ExchangerId == request.ExchangerId)
-				.ProjectTo<AllByExchangerDto>(_mapper.ConfigurationProvider)
-				.ToListAsync(cancellationToken);
+            try
+            {
+                requestQuery = await _dbContext.Orders
+                .Where(order => order.ExchangerId == request.ExchangerId)
+                .AsNoTracking()
+                .ProjectTo<AllByExchangerDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+            }
+			catch(Exception exception)
+            {
+				return new AllByExchangerVm
+				{
+					Success = false,
+					Error = exception.Message
+				};
+            }
+			
 
-			return new AllByExchangerVm { Orders = requestQuery };
+			return new AllByExchangerVm { Orders = requestQuery,
+											Success = true};
         }
 	}
 }

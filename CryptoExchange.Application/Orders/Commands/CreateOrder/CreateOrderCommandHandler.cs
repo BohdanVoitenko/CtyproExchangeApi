@@ -5,7 +5,7 @@ using MediatR;
 
 namespace CryptoExchange.Application.Orders.Commands.CreateOrder
 {
-	public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Guid>
+	public class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, CreateOrderResultVm>
 	{
         private readonly ICryptoExchangeDbContext _dbContext;
 
@@ -14,7 +14,7 @@ namespace CryptoExchange.Application.Orders.Commands.CreateOrder
             _dbContext = dbContext;
         }
 
-        public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+        public async Task<CreateOrderResultVm> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
         {
             var exchanger = _dbContext.Exchangers.FirstOrDefault(e => e.Id == request.ExchangerId);
 
@@ -36,14 +36,29 @@ namespace CryptoExchange.Application.Orders.Commands.CreateOrder
                 EditTime = null
             };
 
-            await _dbContext.Orders.AddAsync(order, cancellationToken);
-
+            _dbContext.Orders.Add(order);
             exchanger.Orders.Add(order);
 
             _dbContext.Exchangers.Attach(exchanger);
-            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return order.Id;
+            try
+            {
+                await _dbContext.SaveChangesAsync(cancellationToken);
+            }
+            catch(Exception exception)
+            {
+                return new CreateOrderResultVm
+                {
+                    Succes = false,
+                    Error = exception.Message
+                };
+            }
+
+            return new CreateOrderResultVm
+            {
+                Succes = true,
+                OrderId = order.Id
+            };
         }
     }
 }

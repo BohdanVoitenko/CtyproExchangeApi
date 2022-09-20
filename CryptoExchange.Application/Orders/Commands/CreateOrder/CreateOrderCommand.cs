@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CryptoExchange.Application.Orders.Commands.CreateOrder
 {
-	public class CreateOrderCommand : IRequest<Guid>
+	public class CreateOrderCommand : IRequest<CreateOrderResultVm>
 	{
 		public Guid ExchangerId { get; set; }
 		public Guid OrderId { get; set; }

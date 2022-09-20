@@ -27,7 +27,7 @@ namespace CryptoExchange.Tests.Exchangers.Commands
             CancellationToken.None);
 
             //Assert
-            Assert.NotNull(Context.Exchangers.SingleOrDefault(ex => ex.Id == result));
+            Assert.NotNull(Context.Exchangers.SingleOrDefault(ex => ex.Id == result.ExchangerId));
         }
 
         [Fact]

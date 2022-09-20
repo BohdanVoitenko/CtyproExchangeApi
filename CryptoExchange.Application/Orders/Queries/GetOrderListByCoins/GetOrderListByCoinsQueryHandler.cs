@@ -21,6 +21,7 @@ namespace CryptoExchange.Application.Orders.Queries.GetOrderListByCoins
         {
 			var ordersQuery = await _dbContext.Orders
 				.Where(order => order.ExchangeFrom == request.From && order.ExchangeTo == request.To)
+				.AsNoTracking()
 				.ProjectTo<OrderListByCoinsDto>(_mapper.ConfigurationProvider)
 				.ToListAsync(cancellationToken);
 

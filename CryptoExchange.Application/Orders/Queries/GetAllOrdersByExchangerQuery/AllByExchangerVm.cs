@@ -3,7 +3,9 @@ namespace CryptoExchange.Application.Orders.Queries.GetAllOrdersByExchangerQuery
 {
 	public class AllByExchangerVm
 	{
-		public List<AllByExchangerDto> Orders { get; set; }
+		public bool Success { get; set; }
+		public string? Error { get; set; }
+		public List<AllByExchangerDto>? Orders { get; set; }
 	}
 }
 

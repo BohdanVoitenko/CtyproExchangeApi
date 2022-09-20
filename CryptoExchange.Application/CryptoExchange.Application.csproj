@@ -57,6 +57,7 @@
     <None Remove="Common\JwtAuthentication\" />
     <None Remove="System.IdentityModel.Tokens.Jwt" />
     <None Remove="System.Net.Http" />
+    <None Remove="Common\UserService\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Interfaces\" />
@@ -88,6 +89,7 @@
     <Folder Include="Exchangers\Commands\CreateExchanger\" />
     <Folder Include="Exchangers\Commands\DeleteAllOrders\" />
     <Folder Include="Common\JwtAuthentication\" />
+    <Folder Include="Common\UserService\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.8" />

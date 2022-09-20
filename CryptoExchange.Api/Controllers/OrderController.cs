@@ -3,6 +3,7 @@ using AutoMapper;
 using CryptoExchange.Api.Models;
 using CryptoExchange.Application.Common.Caching;
 using CryptoExchange.Application.Common.Exceptions;
+using CryptoExchange.Application.Interfaces;
 using CryptoExchange.Application.Orders.Commands.CreateFromXmlFile;
 using CryptoExchange.Application.Orders.Commands.CreateOrder;
 using CryptoExchange.Application.Orders.Commands.DeleteOrder;
@@ -23,8 +24,11 @@ namespace CryptoExchange.Api.Controllers
 	public class OrderController : BaseController
 	{
 		private readonly IMapper _mapper;
+        private readonly ILogger<OrderController> _logger;
+        private readonly IUserService _userService;
 
-		public OrderController(IMapper mapper) => _mapper = mapper;
+		public OrderController(IMapper mapper, ILogger<OrderController> logger, IUserService userService)
+            => (_mapper, _logger, _userService) = (mapper, logger, userService);
 
         /// <summary>
         /// Gets the list of orders
@@ -42,6 +46,10 @@ namespace CryptoExchange.Api.Controllers
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		public async Task<ActionResult<AllOrdersVm>> GetAll()
         {
+            _logger.LogInformation("Here is my logger working");
+            _logger.LogError(_userService.GetTraceIdentifier());
+            _logger.LogError(_userService.GetUserName());
+
 			var query = new GetAllOrdersQuery();
 
 			var vm = await Mediator.Send(query);
@@ -76,6 +84,16 @@ namespace CryptoExchange.Api.Controllers
             var query = _mapper.Map<AllByExchangerQuery>(orderListByExchangerDto);
 
 			var vm = await Mediator.Send(query);
+
+            if(vm.Error is not null)
+            {
+                _logger.LogError(vm.Error);
+                _logger.LogInformation(_userService.GetUserName());
+                _logger.LogTrace(_userService.GetTraceIdentifier());
+
+                return BadRequest(vm);
+            }
+
 			return Ok(vm);
         }
 
@@ -97,7 +115,7 @@ namespace CryptoExchange.Api.Controllers
         /// }
         /// </remarks>
         /// <param name="createOrderDto">CreateOrderDtp object</param>
-        /// <returns>Returns id (guid)</returns>
+        /// <returns>Returns CreateOrderResultVm Object</returns>
         /// <response code="201">Success</response>
         /// <response code="401">User is unauthorized</response>
         /// <response code="400">Bad request/validation failed</response>
@@ -105,13 +123,22 @@ namespace CryptoExchange.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateOrderDto createOrderDto)
+        public async Task<ActionResult<CreateOrderResultVm>> Create([FromBody] CreateOrderDto createOrderDto)
         {
 			var command = _mapper.Map<CreateOrderCommand>(createOrderDto);
-			//command.UserId = UserId;
-			var orderId = await Mediator.Send(command);
 
-			return Ok(orderId);
+			var result = await Mediator.Send(command);
+
+            if (result.Error is not null)
+            {
+                _logger.LogError(result.Error);
+                _logger.LogTrace(_userService.GetTraceIdentifier());
+                _logger.LogInformation(_userService.GetUserName());
+
+                return BadRequest(result);
+            }
+
+			return Ok(result);
         }
 
         /// <summary>
@@ -164,7 +191,7 @@ namespace CryptoExchange.Api.Controllers
         ///     "MaxAmount":2345.0
         /// </remarks>
         /// <param name="updateOrderDto">UpdateOrderDto object</param>
-        /// <returns>Returns NoContent</returns>
+        /// <returns>Returns UpdateOrderResultVm Object</returns>
         /// <response code="204">Success</response>
         /// <response code="401">User is unauthorized</response>
         /// <response code="400">Bad request/validation failed</response>
@@ -172,12 +199,21 @@ namespace CryptoExchange.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Update([FromBody] UpdateOrderDto updateOrderDto)
+        public async Task<ActionResult<UpdateOrderResultVm>> Update([FromBody] UpdateOrderDto updateOrderDto)
         {
             var command = _mapper.Map<UpdateOrderCommand>(updateOrderDto);
-            await Mediator.Send(command);
+            var result = await Mediator.Send(command);
 
-            return NoContent();
+            if(result.Error is not null)
+            {
+                _logger.LogError(result.Error);
+                _logger.LogTrace(_userService.GetTraceIdentifier());
+                _logger.LogInformation(_userService.GetUserName());
+
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
 
         /// <summary>
@@ -196,14 +232,22 @@ namespace CryptoExchange.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Delete(Guid exchangerId, Guid orderId)
+        public async Task<ActionResult<DeleteOrderResultVm>> Delete(Guid exchangerId, Guid orderId)
         {
             var deleteOrderDto = new DeleteOrderDto { ExchangerId = exchangerId, OrderId = orderId };
 
             var command = _mapper.Map<DeleteOrderCommand>(deleteOrderDto);
 
-            await Mediator.Send(command);
-            return NoContent();
+            var result = await Mediator.Send(command);
+
+            if(result.Error is not null)
+            {
+                _logger.LogError(result.Error);
+                _logger.LogTrace(_userService.GetTraceIdentifier());
+                _logger.LogInformation(_userService.GetUserName());
+                return BadRequest(result);
+            }
+            return Ok(result);
         }
 
         /// <summary>
@@ -231,6 +275,14 @@ namespace CryptoExchange.Api.Controllers
 			var query = _mapper.Map<CreateOrderListCommand>(createOrderListUsingXmlDto);
 
 			var result = await Mediator.Send(query);
+
+            if(result.Error is not null)
+            {
+                _logger.LogError(result.Error);
+                _logger.LogTrace(_userService.GetTraceIdentifier());
+                _logger.LogInformation(_userService.GetUserName());
+                return BadRequest(result);
+            }
 			return Ok(result);
         }
     }

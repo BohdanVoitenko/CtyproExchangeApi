@@ -9,7 +9,9 @@ namespace CryptoExchange.Application.Exchangers.Commands
 		{
 			RuleFor(createExchangerCommand => createExchangerCommand.UserId).NotNull().NotEqual(string.Empty);
 			RuleFor(createExchangerCommand => createExchangerCommand.Name).NotNull().NotEqual(string.Empty)
-				.MaximumLength(12);
+				.MinimumLength(6).MaximumLength(24);
+			RuleFor(createExchangerCommand => createExchangerCommand.WebResourceUrl).NotNull().NotEqual(string.Empty)
+				.MinimumLength(6);
 		}
 	}
 }

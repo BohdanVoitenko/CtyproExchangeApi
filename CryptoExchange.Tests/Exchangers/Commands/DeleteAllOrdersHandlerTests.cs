@@ -27,7 +27,8 @@ namespace CryptoExchange.Tests.Exchangers.Commands
 
 
             //Assert
-            result.ShouldBeOfType<Unit>();
+            result.ShouldBeOfType<DeleteAllOrdersResultVm>();
+            result.Success.ShouldBe(true);
         }
 
         [Fact]

@@ -8,7 +8,8 @@ namespace CryptoExchange.Application.UsersAuth.Commands.LoginUserCommand
 		public LoginUserCommangValidator()
 		{
 			RuleFor(loginUserCommand => loginUserCommand.Password).MinimumLength(6).NotEqual(string.Empty).NotNull();
-			RuleFor(loginUserCommand => loginUserCommand.Email).EmailAddress().NotEqual(string.Empty).NotNull();
+			RuleFor(loginUserCommand => loginUserCommand.Email).EmailAddress().NotEqual(string.Empty).NotNull()
+				.MinimumLength(6).MaximumLength(24);
 			RuleFor(loginUserCommand => loginUserCommand.UserName).MinimumLength(5).NotEqual(string.Empty).NotNull();
 		}
 	}

@@ -6,6 +6,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <ImplicitUsings>enable</ImplicitUsings>
+    <DockerComposeProjectPath>../docker-compose.dcproj</DockerComposeProjectPath>
+    <UserSecretsId>45a38970-1e28-470b-b10d-f1d1655cca06</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +33,7 @@
     <None Remove="System.IdentityModel.Tokens.Jwt" />
     <None Remove="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <None Remove="Serilog.AspNetCore" />
+    <None Remove="Services\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
@@ -55,5 +58,6 @@
     <Folder Include="Controllers\" />
     <Folder Include="Models\" />
     <Folder Include="Installers\" />
+    <Folder Include="Services\" />
   </ItemGroup>
 </Project>

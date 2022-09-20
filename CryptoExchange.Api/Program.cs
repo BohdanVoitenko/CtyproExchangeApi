@@ -53,30 +53,30 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-builder.Services.ConfigureApplicationCookie(o =>
-{
-    o.Events = new CookieAuthenticationEvents()
-    {
-        OnRedirectToLogin = (ctx) =>
-        {
-            if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
-            {
-                ctx.Response.StatusCode = 401;
-            }
+//builder.Services.ConfigureApplicationCookie(o =>
+//{
+//    o.Events = new CookieAuthenticationEvents()
+//    {
+//        OnRedirectToLogin = (ctx) =>
+//        {
+//            if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+//            {
+//                ctx.Response.StatusCode = 401;
+//            }
 
-            return Task.CompletedTask;
-        },
-        OnRedirectToAccessDenied = (ctx) =>
-        {
-            if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
-            {
-                ctx.Response.StatusCode = 403;
-            }
+//            return Task.CompletedTask;
+//        },
+//        OnRedirectToAccessDenied = (ctx) =>
+//        {
+//            if (ctx.Request.Path.StartsWithSegments("/api") && ctx.Response.StatusCode == 200)
+//            {
+//                ctx.Response.StatusCode = 403;
+//            }
 
-            return Task.CompletedTask;
-        }
-    };
-});
+//            return Task.CompletedTask;
+//        }
+//    };
+//});
 
 builder.Services.AddAutoMapper(config =>
 {
@@ -113,7 +113,7 @@ builder.Services.AddSwaggerGen(config =>
     config.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "JWT Token Authentication API",
+        Title = "Crypto Exchange API",
         Description = "ASP.NET Core 3.1 Web API"
     });
     // To Enable authorization using Swagger (JWT)  
@@ -141,13 +141,13 @@ builder.Services.AddSwaggerGen(config =>
 
                     }
                 });
-});  
-
+});
 
 
 builder.Services.AddScoped<ICryptoExchangeDbContext, CryptoExchangeDbContext>();
-builder.Services.AddSingleton(builder.Configuration);
+builder.Services.AddSingleton<IConfiguration>(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
+
 
 
 try

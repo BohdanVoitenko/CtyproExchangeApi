@@ -13,19 +13,23 @@ namespace CryptoExchange.Persistence
 	{
 		public static IServiceCollection AddPersistence(this IServiceCollection services,
 			IConfiguration configuration)
-        {
-			var connectionString = configuration["DbConnection"];
-			services.AddDbContext<CryptoExchangeDbContext>(options =>
-			{
-				options.UseSqlite(connectionString);
-			});
+		{
+			var server = configuration["DatabaseServer"] ?? "";
+			var port = configuration["DatabasePort"] ?? "";
+			var user = configuration["DatabaseUser"] ?? "";
+			var password = configuration["DatabasePassword"] ?? "";
+			var database = configuration["Database"] ?? "";
+
+			var connectionString = $"Server={server}, {port}; Initial Catalog={database}; User ID={user}; Password={password}";
+
+            services.AddDbContext<CryptoExchangeDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString);
+
+            });
+
             services.AddScoped<ICryptoExchangeDbContext>(provider =>
                 provider.GetService<CryptoExchangeDbContext>());
-            //services.AddScoped<UserManager<AppUser>>();
-            //services.AddScoped<IUserManager<IdentityUser>>(provider =>
-            //    provider.GetService<ApplicationUserManager<AppUser>>());
-            //services.AddScoped<ISignInManager<IdentityUser>>(provider =>
-            //    provider.GetService<ApplicationSignInManager<AppUser>>());
 
             return services;
 

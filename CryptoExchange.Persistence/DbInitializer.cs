@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
+
 namespace CryptoExchange.Persistence
 {
 	public static class DbInitializer

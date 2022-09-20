@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  cryptoexchange.api:
+    image: ${DOCKER_REGISTRY-}cryptoexchange
+    build:
+      context: .
+      dockerfile: CryptoExchange.Api/Dockerfile

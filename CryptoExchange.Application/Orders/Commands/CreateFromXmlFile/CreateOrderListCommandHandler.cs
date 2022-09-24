@@ -59,10 +59,11 @@ namespace CryptoExchange.Application.Orders.Commands.CreateFromXmlFile
 
             foreach (var order in orders)
             {
-                order.Id = new Guid();
+                order.Id = Guid.NewGuid();
                 order.Exchanger = exchanger;
                 order.ExchangerId = exchanger.Id;
                 order.ExchangerName = exchanger.Name;
+                order.CreationTime = DateTime.UtcNow;
                 list.Add(_mapper.Map<OrderDto>(order));
             }
 

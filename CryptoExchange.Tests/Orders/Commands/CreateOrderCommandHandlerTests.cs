@@ -36,7 +36,6 @@ namespace CryptoExchange.Tests.Orders.Commands
                         Amount = amount,
                         MinAmount = minamount,
                         MaxAmount = maxamount,
-                        OrderId = Guid.Parse("c718d094-6727-4775-9c54-3783d354e845")
                     },
                     CancellationToken.None
             );

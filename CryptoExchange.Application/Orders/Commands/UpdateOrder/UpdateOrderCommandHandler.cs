@@ -37,7 +37,7 @@ namespace CryptoExchange.Application.Orders.Commands.UpdateOrder
 			entity.IncomeSum = request.In;
 			entity.MinAmount = request.MinAmount;
 			entity.MaxAmount = request.MaxAmount;
-			entity.EditTime = DateTime.Now;
+			entity.EditTime = DateTime.UtcNow;
 
 			var changedEntity = _dbContext.Orders.Attach(entity);
 			changedEntity.State = EntityState.Modified;

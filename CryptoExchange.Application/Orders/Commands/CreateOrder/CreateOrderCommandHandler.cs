@@ -31,8 +31,8 @@ namespace CryptoExchange.Application.Orders.Commands.CreateOrder
                 Amount = request.Amount,
                 IncomeSum = request.In,
                 OutcomeSum = request.Out,
-                CreationTime = DateTime.Now,
-                Id = new Guid(),
+                CreationTime = DateTime.UtcNow,
+                Id = Guid.NewGuid(),
                 EditTime = null
             };
 

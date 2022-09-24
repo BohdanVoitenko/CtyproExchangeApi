@@ -7,7 +7,6 @@ namespace CryptoExchange.Application.Orders.Commands.CreateOrder
 	{
 		public CreateOrderCommandValidator()
 		{
-            RuleFor(command => command.OrderId).NotEqual(Guid.Empty);
             RuleFor(command => command.ExchangerId).NotEqual(Guid.Empty);
             RuleFor(command => command.From).NotEmpty().MaximumLength(10);
             RuleFor(command => command.To).NotEmpty().MaximumLength(10);

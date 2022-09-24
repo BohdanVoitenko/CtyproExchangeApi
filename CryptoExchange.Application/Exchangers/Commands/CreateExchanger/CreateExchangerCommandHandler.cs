@@ -24,9 +24,18 @@ namespace CryptoExchange.Application.Exchangers.Commands
 
 			if (user == null) throw new NotFoundException(nameof(AppUser), request.UserId);
 
+			if(user.ExchangerId is not null)
+            {
+                return new CreateExchangerResultVm
+                {
+                    Success = false,
+                    Error = "You already have created exchanger. There is no option to create couple exchangers for one user."
+                };
+            }
+
 			var exchanger = new Exchanger
 			{
-				Id = new Guid(),
+				Id = Guid.NewGuid(),
 				Name = request.Name,
 				User = user,
 				WebResuorceUrl = request.WebResourceUrl

@@ -21,7 +21,17 @@ namespace CryptoExchange.Application.Common.Caching
 
         public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
         {
-            var cacheSettings = context.HttpContext.RequestServices.GetRequiredService<RedisCacheSettings>();
+            //var cacheSettings = context.HttpContext.RequestServices.GetRequiredService<RedisCacheSettings>();
+            var enable = Environment.GetEnvironmentVariable("REDIS_ENABLE");
+            var host = Environment.GetEnvironmentVariable("REDIS_HOST");
+            var port = Environment.GetEnvironmentVariable("REDIS_PORT");
+            var connectionString = $"{host}:{port}";
+            var cacheSettings = new RedisCacheSettings
+            {
+                Enabled = Convert.ToBoolean(enable),
+                ConnectionString = connectionString
+            };
+
             if (!cacheSettings.Enabled)
             {
                 await next();

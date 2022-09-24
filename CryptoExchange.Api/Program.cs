@@ -20,6 +20,8 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Configuration.AddEnvironmentVariables();
+
 var logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
@@ -175,6 +177,7 @@ app.UseSwaggerUI(config =>
     config.RoutePrefix = string.Empty;
     config.SwaggerEndpoint("/swagger/v1/swagger.json", "Crypto Exchange API");
 });
+//PrepDb.PrepPopulation(app);
 app.UseCustomExceptionHandler();
 app.UseRouting();
 app.UseHttpsRedirection();
@@ -182,6 +185,7 @@ app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseEndpoints(options =>
 {
     options.MapControllers();

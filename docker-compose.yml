@@ -1,8 +1,47 @@
 version: '3.4'
 
+networks:
+  cryptoexchange-dev:
+    driver: bridge
+
 services:
   cryptoexchange.api:
-    image: ${DOCKER_REGISTRY-}cryptoexchange
+    image: crypto
     build:
       context: .
       dockerfile: CryptoExchange.Api/Dockerfile
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+      - cache
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=voitenko
+      - DB_PASSWORD=voitenko
+      - DB_NAME=cryptoexchangedb
+      - REDIS_ENABLE=true
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+    networks:
+      - cryptoexchange-dev
+  cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379"
+    command: redis-server --save 20 1 --loglevel warning
+    networks:
+      - cryptoexchange-dev
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=voitenko
+      - POSTGRES_PASSWORD=voitenko
+      - DOSTGRES_DB=cryptoexchangedb
+    ports:
+      - "5432"
+    networks:
+      - cryptoexchange-dev

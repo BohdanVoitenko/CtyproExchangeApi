@@ -3,7 +3,7 @@
   <PropertyGroup Label="Globals">
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
-    <ProjectGuid>{779C62A9-7681-4D67-8435-DC6CB92DCC77}</ProjectGuid>
+    <ProjectGuid>{69AD7E46-1B1E-456C-9A29-756BA62A1418}</ProjectGuid>
     <DockerLaunchBrowser>True</DockerLaunchBrowser>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
     <DockerServiceName>cryptoexchange.api</DockerServiceName>

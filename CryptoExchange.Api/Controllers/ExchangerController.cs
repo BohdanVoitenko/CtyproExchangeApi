@@ -40,12 +40,12 @@ namespace CryptoExchange.Api.Controllers
         /// </remarks>
         /// <param name="createExchangerDto">CreateExchangerDto object</param>
         /// <returns>Returns CreateExchangerResultVm Object</returns>
-        /// <response code="201">Success</response>
+        /// <response code="200">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="401">User is unaithorized</response>
         [Authorize]
         [HttpPost("create")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<ActionResult<CreateExchangerResultVm>> Create([FromBody]CreateExchangerDto createExchangerDto)

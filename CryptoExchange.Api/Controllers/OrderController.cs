@@ -116,11 +116,11 @@ namespace CryptoExchange.Api.Controllers
         /// </remarks>
         /// <param name="createOrderDto">CreateOrderDtp object</param>
         /// <returns>Returns CreateOrderResultVm Object</returns>
-        /// <response code="201">Success</response>
+        /// <response code="200">Success</response>
         /// <response code="401">User is unauthorized</response>
         /// <response code="400">Bad request/validation failed</response>
 		[HttpPost("create")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<CreateOrderResultVm>> Create([FromBody] CreateOrderDto createOrderDto)
@@ -192,11 +192,11 @@ namespace CryptoExchange.Api.Controllers
         /// </remarks>
         /// <param name="updateOrderDto">UpdateOrderDto object</param>
         /// <returns>Returns UpdateOrderResultVm Object</returns>
-        /// <response code="204">Success</response>
+        /// <response code="200">Success</response>
         /// <response code="401">User is unauthorized</response>
         /// <response code="400">Bad request/validation failed</response>
         [HttpPut("update")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UpdateOrderResultVm>> Update([FromBody] UpdateOrderDto updateOrderDto)
@@ -225,11 +225,11 @@ namespace CryptoExchange.Api.Controllers
         /// <param name="exchangerId">Id of exchanger</param>
         /// <param name="orderId">Id of exhcanger's order</param>
         /// <returns>Returns NoContent</returns>
-        /// <response code="204">Success</response>
+        /// <response code="200">Success</response>
         /// <response code="401">User is unauthorized</response>
         /// <response code="400">Bad request/validation failed</response>
         [HttpDelete("{exchangerId}/{orderId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<DeleteOrderResultVm>> Delete(Guid exchangerId, Guid orderId)
@@ -267,7 +267,7 @@ namespace CryptoExchange.Api.Controllers
         /// <response code="401">User is unauthorized</response>
         /// <response code="400">Bad request/validation failed</response>
 		[HttpPost("createwithxml")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<OrderListFromXmlVm>> Create([FromBody]CreateOrderListUsingXmlDto createOrderListUsingXmlDto)
